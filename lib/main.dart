@@ -4,6 +4,7 @@ import 'package:uni_links/uni_links.dart';
 import '/blocs/cart/cart_bloc.dart';
 import '/routes/app_router.dart';
 import '/service_locator.dart';
+import 'theme/custom_theme.dart';
 
 import 'blocs/app/app_bloc.dart';
 
@@ -55,9 +56,8 @@ class _MyAppState extends State<MyApp> {
         routeInformationParser: appRouter.router.routeInformationParser,
         routerDelegate: appRouter.router.routerDelegate,
         title: 'Go Router',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: CustomTheme.lightTheme,
+        darkTheme: CustomTheme.darkTheme,
         debugShowCheckedModeBanner: false,
       ),
     );
