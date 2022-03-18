@@ -16,23 +16,23 @@ class BottomNavBar extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'home',
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.chat_bubble_sharp),
-          label: 'group',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.alternate_email_sharp),
           label: 'DM',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.alternate_email_sharp),
+          label: 'Mentions',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.search_rounded),
-          label: 'search',
+          label: 'Search',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
-          label: 'me',
+          label: 'You',
         ),
       ],
     );

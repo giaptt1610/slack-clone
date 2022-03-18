@@ -16,68 +16,118 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   int _tabIndex = 0;
+  late AnimationController _controller;
+  late CurvedAnimation _curvedAnimation;
+
+  final _scrimColorTween =
+      ColorTween(begin: Colors.transparent, end: Colors.black54);
+  final _offsetMain = Tween(begin: Offset(0, 0), end: Offset(0.77, 0));
+  final _offsetDrawer = Tween(begin: Offset(-1, 0), end: Offset(0, 0));
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+
+    _curvedAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final router = getIt<AppRouter>();
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(builder: (context) {
-          return AvatarButton(
-            onTap: () => Scaffold.of(context).openDrawer(),
-          );
-        }),
-        title: Row(
-          children: [
-            Text('Title'),
-            SizedBox(width: 10.0),
-            Text('${router.router.location}'),
-          ],
+    return Stack(
+      children: [
+        SlideTransition(
+          position: _offsetMain.animate(_curvedAnimation),
+          child: Scaffold(
+            appBar: AppBar(
+              leading: Builder(builder: (context) {
+                return AvatarButton(
+                  onTap: () {
+                    print('---avatar click ');
+                  },
+                );
+              }),
+              title: Row(
+                children: [
+                  Text('Title'),
+                  SizedBox(width: 10.0),
+                  Text('${router.router.location}'),
+                ],
+              ),
+            ),
+            body: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [],
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(
+                CupertinoIcons.pencil_outline,
+                size: 28,
+              ),
+            ),
+            bottomNavigationBar: BottomNavBar(
+              currentIndex: _tabIndex,
+              onTap: (index) {
+                if (index != _tabIndex) {
+                  setState(() {
+                    _tabIndex = index!;
+                  });
+                }
+              },
+            ),
+          ),
         ),
-      ),
-      drawer: AppDrawer(),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // ElevatedButton(
-            //     onPressed: () {
-            //       GoRouter.of(context).push('/shop');
-            //     },
-            //     child: Text('Shop')),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       GoRouter.of(context).push('/cart');
-            //     },
-            //     child: Text('Cart')),
-            // ElevatedButton(onPressed: () {}, child: Text('Profile')),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       context.read<AppBloc>().add(LogoutEvent());
-            //     },
-            //     child: Text('Logout')),
-          ],
+        GestureDetector(
+          onTap: () {
+            toggleDrawer();
+          },
+          child: Semantics(
+            label: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+            child: MouseRegion(
+              opaque: true,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) => Container(
+                  color: _scrimColorTween.evaluate(_curvedAnimation),
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          CupertinoIcons.pencil_outline,
-          size: 28,
+        SlideTransition(
+          position: _offsetDrawer.animate(_curvedAnimation),
+          child: AppDrawer(),
         ),
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _tabIndex,
-        onTap: (index) {
-          if (index != _tabIndex) {
-            setState(() {
-              _tabIndex = index!;
-            });
-          }
-        },
-      ),
+      ],
     );
+  }
+
+  void toggleDrawer() {
+    if (_controller.isAnimating) return;
+
+    if (_controller.isCompleted) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
