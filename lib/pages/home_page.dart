@@ -8,6 +8,8 @@ import '../service_locator.dart';
 import '../widgets/bottom_navbar.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/avatar_button.dart';
+import '../widgets/search_box.dart';
+import '../widgets/collapsible_list.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -35,10 +37,17 @@ class _HomePageState extends State<HomePage>
       duration: const Duration(milliseconds: 250),
     );
 
+    _controller.addStatusListener(_onAnimationStatusChanged);
+
     _curvedAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOut,
     );
+  }
+
+  void _onAnimationStatusChanged(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+    } else if (status == AnimationStatus.dismissed) {}
   }
 
   @override
@@ -53,7 +62,7 @@ class _HomePageState extends State<HomePage>
               leading: Builder(builder: (context) {
                 return AvatarButton(
                   onTap: () {
-                    print('---avatar click ');
+                    toggleDrawer();
                   },
                 );
               }),
@@ -66,9 +75,44 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [],
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 70,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Divider(height: 2),
+                            CollapsibleList(
+                              label: 'Channels',
+                            ),
+                            Divider(height: 2),
+                            CollapsibleList(
+                              label: 'Direct Messages',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: SearchBox(
+                        onTap: () {
+                          print('-- tap search box');
+                        },
+                      ),
+                    ),
+                    top: 12.0,
+                    left: 0,
+                    right: 0,
+                  ),
+                ],
               ),
             ),
             floatingActionButton: FloatingActionButton(
@@ -96,11 +140,11 @@ class _HomePageState extends State<HomePage>
           },
           child: Semantics(
             label: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-            child: MouseRegion(
-              opaque: true,
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) => Container(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) => MouseRegion(
+                opaque: _controller.isCompleted,
+                child: Container(
                   color: _scrimColorTween.evaluate(_curvedAnimation),
                 ),
               ),
