@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../theme/colors.dart';
 import '../blocs/app/app_bloc.dart';
 import '../routes/app_router.dart';
 import '../service_locator.dart';
@@ -9,7 +10,10 @@ import '../widgets/bottom_navbar.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/avatar_button.dart';
 import '../widgets/search_box.dart';
+import '../widgets/channel_item.dart';
 import '../widgets/collapsible_list.dart';
+import '../widgets/custom_expansion_tile.dart';
+import '../widgets/dm_item.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -84,17 +88,59 @@ class _HomePageState extends State<HomePage>
                     right: 0,
                     child: Container(
                       child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Divider(height: 2),
-                            CollapsibleList(
-                              label: 'Channels',
-                            ),
-                            Divider(height: 2),
-                            CollapsibleList(
-                              label: 'Direct Messages',
-                            ),
-                          ],
+                        child: Builder(
+                          builder: (BuildContext context) {
+                            List<Widget> _children = [
+                              CustomExpansionTile(
+                                title: const Text(
+                                  'Channels',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                trailing: Transform.rotate(
+                                  angle: 0,
+                                  child: const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: AppColors.primaryColor,
+                                    size: 16.0,
+                                  ),
+                                ),
+                                expandedAlignment: Alignment.centerLeft,
+                                children: [
+                                  ChannelItem(name: 'channel 1'),
+                                  ChannelItem(name: 'channel 2'),
+                                  ChannelItem(name: 'channel 3'),
+                                  ChannelItem(name: 'channel 4'),
+                                ],
+                              ),
+                              CollapsibleList(
+                                label: 'Direct Messages',
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                children: [
+                                  DmItem(
+                                    recipentName: 'Giaptt',
+                                  ),
+                                  DmItem(
+                                    recipentName: 'james2012',
+                                    avatarUrl:
+                                        'https://www.cuteeasydrawings.com/uploads/allimg/201128/1_201128145855_1.png',
+                                  ),
+                                  DmItem(
+                                    recipentName: 'test',
+                                  ),
+                                  DmItem(
+                                    recipentName: 'kfhmfg',
+                                  ),
+                                  DmItem(
+                                    recipentName: 'fhfgh',
+                                  ),
+                                ],
+                              ),
+                            ];
+                            return Column(
+                              children: _children,
+                            );
+                          },
                         ),
                       ),
                     ),
