@@ -14,6 +14,7 @@ import '../widgets/channel_item.dart';
 import '../widgets/collapsible_list.dart';
 import '../widgets/custom_expansion_tile.dart';
 import '../widgets/dm_item.dart';
+import '../widgets/add_teammate_btn.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -135,6 +136,13 @@ class _HomePageState extends State<HomePage>
                                     recipentName: 'fhfgh',
                                   ),
                                 ],
+                              ),
+                              Divider(),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: AddTeammateBtn(
+                                  onTap: () {},
+                                ),
                               ),
                             ];
                             return Column(
