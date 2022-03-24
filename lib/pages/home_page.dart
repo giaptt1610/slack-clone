@@ -15,6 +15,7 @@ import '../widgets/collapsible_list.dart';
 import '../widgets/custom_expansion_tile.dart';
 import '../widgets/dm_item.dart';
 import '../widgets/add_teammate_btn.dart';
+import 'jumpto_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -159,6 +160,12 @@ class _HomePageState extends State<HomePage>
                       child: SearchBox(
                         onTap: () {
                           print('-- tap search box');
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => JumpToPage(),
+                            ),
+                          );
                         },
                       ),
                     ),

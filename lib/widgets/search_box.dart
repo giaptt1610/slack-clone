@@ -17,6 +17,7 @@ class SearchBox extends StatelessWidget {
         ),
         child: TextField(
           controller: controller,
+          enabled: onTap == null,
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
